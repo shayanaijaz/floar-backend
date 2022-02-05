@@ -19,7 +19,8 @@ const mongo = new MongoClient(url)
 mongo.connect(); 
 
 
-// basic test route to check if we can talk to API 
+
+// index
 app.get('/', (req, res) => {
   /*
   var options = {
@@ -34,9 +35,7 @@ app.get('/', (req, res) => {
 
   request(options, function (error, response, body) {
 	  if (error) throw new Error(error);
-
     console.log("Response recieved. \n")
-
     // grab specific info about team and add to console 
     JsonOutput = JSON.parse(body)
     console.log(JsonOutput.api.teams)
@@ -49,7 +48,7 @@ app.get('/', (req, res) => {
   res.send('Floar Server')
 })
 
-// pull all TEAMS
+// route to pull all NBA teams and send them to client 
 app.get('/teams', (req, res) => {
   var gamesoptions = { 
     method: 'GET',
@@ -63,18 +62,16 @@ app.get('/teams', (req, res) => {
 
   request(gamesoptions, function (error, response, body) {
 	  if (error) throw new Error(error);
-
     console.log("Response recieved. \n")
-
-    // grab specific info about team and add to console 
+    // format list of teams and send them 
     JsonOutput = JSON.parse(body)
     var teams = JsonOutput.api.teams
-    console.log(JsonOutput.api.teams)
+    //console.log(JsonOutput.api.teams)
     res.send(teams)
   })
 })
 
-// get info about games from a specific year 
+// Route to match games with teams that user has chosen, then sends list of those games to client
 app.get('/games', (req, res) => {
   var gamesoptions = { 
     method: 'GET',
@@ -96,17 +93,25 @@ app.get('/games', (req, res) => {
     mongo.db("floarDb").collection("floarCollection").findOne({userid: "1"}, function(err, result){
       if (err) throw err
       userTeams = result.teams
-      // make array of games that include teams user likes 
+      // make array of games that include teams from user 
       const filteredGames = allGames.filter(game => {
         return userTeams.includes(game.hTeam.teamId)
       })
       console.log(filteredGames)
       res.send(filteredGames)
     })
-
   })
-  // placeholder website page 
+})
 
+// create post function to edit user teams 
+app.put('/teams', (req, res) => { 
+  console.log("input: " + req.body.newTeams)
+  console.log(req.body)
+  mongo.db("floarDb").collection("floarCollection").updateOne(
+    {userid: "1"},
+    {$set: {"teams": req.body.newTeams}}
+  )
+  res.send('Floar Server')
 })
 
 // start server
