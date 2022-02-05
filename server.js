@@ -16,6 +16,7 @@ mongo.connect();
 
 // basic test route to check if we can talk to API 
 app.get('/', (req, res) => {
+  /*
   var options = {
     method: 'GET',
     url: 'https://api-nba-v1.p.rapidapi.com/teams/city/Atlanta',
@@ -38,6 +39,7 @@ app.get('/', (req, res) => {
     testJson = JsonOutput.api.teams[0].fullName
     console.log(testJson)
   })
+  */
   // placeholder website page 
   res.send('Floar Server')
 })
@@ -84,19 +86,23 @@ app.get('/games', (req, res) => {
 
     console.log("Response recieved. \n")
 
-    // grab specific info about team and add to console 
+    // get all games played in 2020 from API
     JsonOutput = JSON.parse(body)
     allGames = JsonOutput.api.games
-    // console.log(allGames)
-    console.log(allGames[0].city)
 
-
+    // get user from DB, find teams for them 
+    mongo.db("floarDb").collection("floarCollection").findOne({userid: 1}).then(function(item){
+      console.log(item.teams)
+      //const userTeams = item.teams
+      //console.o
+    })
 
     // loop through all games, print ones that match 
+    var x=0
     for (var i=0; i<allGames.length; i++){
       var game = allGames[i]
       if (game.city == "Atlanta") {
-        console.log(i)
+        x++; 
       }
     }
   })
