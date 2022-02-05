@@ -10,9 +10,10 @@ const { type } = require('os')
 // init app and database 
 const app = express()
 app.use(cors())
-app.use(bodyparser.urlencoded({ extended: true }))  
+// app.use(bodyparser.urlencoded({ extended: true }))  
 app.use(express.static("public"))
-app.use(express.urlencoded());
+// app.use(express.urlencoded());
+app.use(bodyparser.json())
 
 
 // connect to database 
@@ -104,12 +105,10 @@ app.get('/games', (req, res) => {
 
 // post router to edit teams that the user likes 
 app.put('/teams', (req, res) => { 
-  console.log("input: " + req.body.newTeams)
-  console.log(req.body)
-  var newTry = JSON.parse(req.body.newTeams)
+  // var newTry = JSON.parse(req.body.newTeams)
   mongo.db("floarDb").collection("floarCollection").updateOne(
     {userid: "1"},
-    {$set: {"teams": newTry}}
+    {$set: {"teams": req.body.newTeams}}
   )
   res.send('Floar Server')
 })
