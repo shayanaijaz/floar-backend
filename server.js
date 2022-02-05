@@ -11,11 +11,11 @@ const app = express()
 app.use(bodyparser.urlencoded({ extended: true }))  
 app.use(express.static("public"))
 
-/*
+// connect to database 
 const url = "mongodb+srv://floar-admin:floarpass@cluster0.t2uu7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 const mongo = new MongoClient(url)
 mongo.connect(); 
-*/ 
+
 
 // basic test route to check if we can talk to API 
 app.get('/', (req, res) => {
@@ -92,21 +92,19 @@ app.get('/games', (req, res) => {
     // get all games played in 2020 from API
     JsonOutput = JSON.parse(body)
     allGames = JsonOutput.api.games
-
-    /*
+    
     // get user from DB, find teams for them 
-    mongo.db("floarDb").collection("floarCollection").findOne({userid: 1}).then(function(item){
-      console.log(item.teams)
-      //const userTeams = item.teams
-      //console.o
+    mongo.db("floarDb").collection("floarCollection").findOne({userid: 1}, function(err, result){
+      if (err) throw err;
+      console.log(result.name); 
     })
-    */ 
+     
     // loop through all games, print ones that match 
     var x=0
     for (var i=0; i<allGames.length; i++){
       var game = allGames[i]
       if (game.city == "Atlanta") {
-        x++; 
+        console.log(game.city)
       }
     }
   })
