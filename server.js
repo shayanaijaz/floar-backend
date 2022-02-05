@@ -2,7 +2,7 @@
 const express = require('express')
 const request = require('request')
 const bodyparser = require('body-parser')
-const { MongoClient } = require('mongodb')
+//const { MongoClient } = require('mongodb')
 const { all } = require('proxy-addr')
 const { type } = require('os')
 
@@ -10,9 +10,12 @@ const { type } = require('os')
 const app = express()
 app.use(bodyparser.urlencoded({ extended: true }))  
 app.use(express.static("public"))
+
+/*
 const url = "mongodb+srv://floar-admin:floarpass@cluster0.t2uu7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 const mongo = new MongoClient(url)
 mongo.connect(); 
+*/ 
 
 // basic test route to check if we can talk to API 
 app.get('/', (req, res) => {
@@ -90,13 +93,14 @@ app.get('/games', (req, res) => {
     JsonOutput = JSON.parse(body)
     allGames = JsonOutput.api.games
 
+    /*
     // get user from DB, find teams for them 
     mongo.db("floarDb").collection("floarCollection").findOne({userid: 1}).then(function(item){
       console.log(item.teams)
       //const userTeams = item.teams
       //console.o
     })
-
+    */ 
     // loop through all games, print ones that match 
     var x=0
     for (var i=0; i<allGames.length; i++){
