@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "express": "^4.17.2"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "floar-backend",
+  "description": "edit later",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shayanaijaz/floar-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shayanaijaz/floar-backend/issues"
+  },
+  "homepage": "https://github.com/shayanaijaz/floar-backend#readme"
+}
