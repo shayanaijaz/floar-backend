@@ -85,34 +85,28 @@ app.get('/games', (req, res) => {
       useQueryString: true
     }
   }
-
+    // get all games played in 2020 from API
   request(gamesoptions, function (error, response, body) {
 	  if (error) throw new Error(error);
-
     console.log("Response recieved. \n")
-
-    // get all games played in 2020 from API
     JsonOutput = JSON.parse(body)
     allGames = JsonOutput.api.games
     
-    // get user from DB,
+    // get teams chosen by user 1 in database 
     mongo.db("floarDb").collection("floarCollection").findOne({userid: "1"}, function(err, result){
-      if (err) throw err;
-      console.log(result); 
+      if (err) throw err
+      userTeams = result.teams
+      // make array of games that include teams user likes 
+      const filteredGames = allGames.filter(game => {
+        return userTeams.includes(game.hTeam.teamId)
+      })
+      console.log(filteredGames)
+      res.send(filteredGames)
     })
-     
-    // loop through all games, print ones that match 
-    /*
-    for (var i=0; i<allGames.length; i++){
-      var game = allGames[i]
-      if (game.city == "Atlanta") {
-        console.log(game.city)
-      }
-    }
-    */
+
   })
   // placeholder website page 
-  res.send('Floar Games')
+
 })
 
 // start server
