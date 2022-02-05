@@ -13,37 +13,13 @@ app.use(cors())
 app.use(express.static("public"))
 app.use(bodyparser.json())
 
-
 // connect to database 
 const url = "mongodb+srv://floar-admin:floarpass@cluster0.t2uu7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 const mongo = new MongoClient(url)
 mongo.connect(); 
 
 // index
-app.get('/', (req, res) => {
-  /*
-  var options = {
-    method: 'GET',
-    url: 'https://api-nba-v1.p.rapidapi.com/teams/city/Atlanta',
-    headers: {
-      'x-rapidapi-host': 'api-nba-v1.p.rapidapi.com',
-      'x-rapidapi-key': '71b806f988msh6c00084b722b3a3p17923cjsnee5cd7d8c0af',
-      useQueryString: true
-    }
-  }
-
-  request(options, function (error, response, body) {
-	  if (error) throw new Error(error);
-    console.log("Response recieved. \n")
-    // grab specific info about team and add to console 
-    JsonOutput = JSON.parse(body)
-    console.log(JsonOutput.api.teams)
-    console.log("----------")
-    testJson = JsonOutput.api.teams[0].fullName
-    console.log(testJson)
-  })
-  */
-  // placeholder website page 
+app.get('/', (req, res) => { 
   res.status(200).send('Floar Server')
 })
 
@@ -59,13 +35,12 @@ app.get('/teams', (req, res) => {
     }
   }
 
-  // format list of teams and send them to client
   request(options, function (error, response, body) {
 	  if (error) throw new Error(error);
       console.log("Response recieved. \n")
       JsonOutput = JSON.parse(body)
       var teams = JsonOutput.api.teams
-    res.status(200).send(teams)
+      res.status(200).send(teams)
   })
 })
 
