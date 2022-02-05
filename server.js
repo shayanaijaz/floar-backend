@@ -3,11 +3,13 @@ const express = require('express')
 const request = require('request')
 const bodyparser = require('body-parser')
 const { MongoClient } = require('mongodb')
+const cors = require("cors")
 const { all } = require('proxy-addr')
 const { type } = require('os')
 
 // init app and database 
 const app = express()
+app.use(cors())
 app.use(bodyparser.urlencoded({ extended: true }))  
 app.use(express.static("public"))
 
@@ -93,20 +95,21 @@ app.get('/games', (req, res) => {
     JsonOutput = JSON.parse(body)
     allGames = JsonOutput.api.games
     
-    // get user from DB, find teams for them 
-    mongo.db("floarDb").collection("floarCollection").findOne({userid: 1}, function(err, result){
+    // get user from DB,
+    mongo.db("floarDb").collection("floarCollection").findOne({userid: "1"}, function(err, result){
       if (err) throw err;
-      console.log(result.name); 
+      console.log(result); 
     })
      
     // loop through all games, print ones that match 
-    var x=0
+    /*
     for (var i=0; i<allGames.length; i++){
       var game = allGames[i]
       if (game.city == "Atlanta") {
         console.log(game.city)
       }
     }
+    */
   })
   // placeholder website page 
   res.send('Floar Games')
