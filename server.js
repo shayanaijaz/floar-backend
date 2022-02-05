@@ -12,13 +12,13 @@ const app = express()
 app.use(cors())
 app.use(bodyparser.urlencoded({ extended: true }))  
 app.use(express.static("public"))
+app.use(express.urlencoded());
+
 
 // connect to database 
 const url = "mongodb+srv://floar-admin:floarpass@cluster0.t2uu7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 const mongo = new MongoClient(url)
 mongo.connect(); 
-
-
 
 // index
 app.get('/', (req, res) => {
@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 
 // route to pull all NBA teams and send them to client 
 app.get('/teams', (req, res) => {
-  var gamesoptions = { 
+  var options = { 
     method: 'GET',
     url: 'https://api-nba-v1.p.rapidapi.com/teams/league/standard',
     headers: {
@@ -60,20 +60,19 @@ app.get('/teams', (req, res) => {
     }
   }
 
-  request(gamesoptions, function (error, response, body) {
+  request(options, function (error, response, body) {
 	  if (error) throw new Error(error);
     console.log("Response recieved. \n")
-    // format list of teams and send them 
+    // format list of teams and send them to client
     JsonOutput = JSON.parse(body)
     var teams = JsonOutput.api.teams
-    //console.log(JsonOutput.api.teams)
     res.send(teams)
   })
 })
 
 // Route to match games with teams that user has chosen, then sends list of those games to client
 app.get('/games', (req, res) => {
-  var gamesoptions = { 
+  var options = { 
     method: 'GET',
     url: 'https://api-nba-v1.p.rapidapi.com/games/seasonYear/2020',
     headers: {
@@ -83,7 +82,7 @@ app.get('/games', (req, res) => {
     }
   }
     // get all games played in 2020 from API
-  request(gamesoptions, function (error, response, body) {
+  request(options, function (error, response, body) {
 	  if (error) throw new Error(error);
     console.log("Response recieved. \n")
     JsonOutput = JSON.parse(body)
@@ -103,13 +102,14 @@ app.get('/games', (req, res) => {
   })
 })
 
-// create post function to edit user teams 
+// post router to edit teams that the user likes 
 app.put('/teams', (req, res) => { 
   console.log("input: " + req.body.newTeams)
   console.log(req.body)
+  var newTry = JSON.parse(req.body.newTeams)
   mongo.db("floarDb").collection("floarCollection").updateOne(
     {userid: "1"},
-    {$set: {"teams": req.body.newTeams}}
+    {$set: {"teams": newTry}}
   )
   res.send('Floar Server')
 })
