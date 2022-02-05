@@ -9,10 +9,8 @@ const { type } = require('os')
 
 // init app and database 
 const app = express()
-app.use(cors())
-// app.use(bodyparser.urlencoded({ extended: true }))  
+app.use(cors())  
 app.use(express.static("public"))
-// app.use(express.urlencoded());
 app.use(bodyparser.json())
 
 
@@ -46,7 +44,7 @@ app.get('/', (req, res) => {
   })
   */
   // placeholder website page 
-  res.send('Floar Server')
+  res.status(200).send('Floar Server')
 })
 
 // route to pull all NBA teams and send them to client 
@@ -61,13 +59,13 @@ app.get('/teams', (req, res) => {
     }
   }
 
+  // format list of teams and send them to client
   request(options, function (error, response, body) {
 	  if (error) throw new Error(error);
-    console.log("Response recieved. \n")
-    // format list of teams and send them to client
-    JsonOutput = JSON.parse(body)
-    var teams = JsonOutput.api.teams
-    res.send(teams)
+      console.log("Response recieved. \n")
+      JsonOutput = JSON.parse(body)
+      var teams = JsonOutput.api.teams
+    res.status(200).send(teams)
   })
 })
 
@@ -98,7 +96,7 @@ app.get('/games', (req, res) => {
         return userTeams.includes(game.hTeam.teamId)
       })
       console.log(filteredGames)
-      res.send(filteredGames)
+      res.status(200).send(filteredGames)
     })
   })
 })
@@ -110,7 +108,7 @@ app.put('/teams', (req, res) => {
     {userid: "1"},
     {$set: {"teams": req.body.newTeams}}
   )
-  res.send('Floar Server')
+  res.status(200).send('Floar Server')
 })
 
 // start server
